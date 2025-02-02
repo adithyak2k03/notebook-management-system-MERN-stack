@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+}
+
+p,ul{
+    margin: 0;
+    padding: 0;
+  }
+
+.page-title{
+/* width: 50%; */
+text-align: center;
+background-color: orange;
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.page-title.h1{
+    margin: 0;
+}
