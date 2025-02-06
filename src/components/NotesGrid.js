@@ -29,8 +29,8 @@ const NotesGrid = ({ notes, onEditNote, onDeleteNote }) => {
                         <small>{note.date}</small>
                         <hr/>                  
                         <div className="card-footer">
-                            <button className="btn btn-primary" onClick={() => onEditNote(note)}>Edit</button>
-                            <button className="btn btn-primary" onClick={() => onDeleteNote(note)}>Delete</button>
+                            <button className="btn btn-warning" onClick={() => onEditNote(note)}>Edit</button>
+                            <button className="btn btn-danger" onClick={() => onDeleteNote(note)}>Delete</button>
                         </div>
                     </div>
                 ))}

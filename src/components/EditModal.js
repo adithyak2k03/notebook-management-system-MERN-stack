@@ -12,8 +12,8 @@ const EditModal = ({ note, onClose, onSave}) => {
     };
 
     return(
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="modal-overlay" onClick={()=> onClose()}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="close-btn" onClick={onClose}>x</button>
                 <h2>Edit Note</h2>
                 <input type="text" value={title} onChange={(e)=> setTittle(e.target.value)}/>

@@ -34,7 +34,12 @@ app.get("/notes", async(req, res) => {
 app.post("/notes", async(req, res) =>{
     try{
         const {title, description, tag} = req.body;
-        const newNote = new Note({ title, description, tag});
+        const newNote = new Note({
+            title,
+            description,
+            tag,
+            date: new Date().toLocaleString(),
+        });
         await newNote.save();
         res.json(newNote);
     }catch(error){

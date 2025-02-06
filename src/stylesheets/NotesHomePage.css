@@ -17,3 +17,34 @@ font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 .page-title.h1{
     margin: 0;
 }
+
+.tag-filter {
+    margin: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.add-note-btn {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.add-note-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.add-note-btn:active {
+    transform: scale(0.98);
+}

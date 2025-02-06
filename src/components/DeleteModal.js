@@ -4,8 +4,8 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const DeleteModal = ({ note, onClose, onConfirm }) => {
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="modal-overlay" onClick={()=> onClose()}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="close-btn" onClick={onClose}>
                     <FontAwesomeIcon icon={faTimes} />
                 </button>

@@ -16,7 +16,6 @@ const AddModal = ( {onClose, onAddNote} ) => {
     };
 
     const handleAddNote = () =>{
-        // console.log(note);
         if(!note.title || !note.description){
             alert("Title and Description are required!");
             return;
@@ -26,8 +25,8 @@ const AddModal = ( {onClose, onAddNote} ) => {
 
     
     return(
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="modal-overlay" onClick={()=> onClose()}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <FontAwesomeIcon
                     icon={faTimes}
                     className="close-icon"

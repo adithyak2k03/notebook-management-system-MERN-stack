@@ -8,7 +8,12 @@ import NotesGrid from "../components/NotesGrid";
 import EditModal from "../components/EditModal";
 import DeleteModal from "../components/DeleteModal";
 
-const API_URL = "http://localhost:5000/notes";
+import {
+    fetchNotesApi,
+    addNoteApi,
+    editNoteApi,
+    deleteNoteApi,
+} from "../services/api";
 
 const NoteHomePage = (props) => {
 
@@ -22,84 +27,61 @@ const NoteHomePage = (props) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState(null);
     
-    const fetchNotes = async() =>{
-        try{
-            const response = await fetch(API_URL);
-            const data = await response.json();
+    const [tags, setTags] = useState([]);
+    const [selectedTag, setSelectedTag] = useState("All");
+
+
+    const fetchNotes = async () => {
+        try {
+            const data = await fetchNotesApi();
             setNotes(data);
-        }catch(error){
-            console.error("Error fetching notes ", error);
+
+            const uniqueTags = ["All", ...new Set(data.map((note) => note.tag))];
+            setTags(uniqueTags);
+        } catch (error) {
+            console.error("Error fetching notes", error);
         }
     };
 
-    const handleAddNote = async(newNote) => {
-        
-        const payload = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newNote),
-        };
-        
-        try{
-            const response = await fetch(API_URL, payload);
+    const handleAddNote = async (newNote) => {
+        try {
+            const savedNote = await addNoteApi(newNote);
 
-            if(response.ok){
-                const savedNote = await response.json();
-                
-                setNotes([...notes, savedNote]);
-                setShowAddModal(false);
-            }else{
-                console.error("Failed to add note");
+            setNotes([...notes, savedNote]);
+
+            if (!tags.includes(savedNote.tag)) {
+                setTags([...tags, savedNote.tag]);
             }
-        }catch(error){
+
+            setShowAddModal(false);
+        } catch (error) {
             console.error("Error adding note", error);
         }
-
-
     };
 
-    const handleEditNote = async(updatedNote) => {
-        const payload = {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedNote),
-        };
-        try{
-            const response = await fetch(`${API_URL}/${updatedNote._id}`, payload);
-            
-            if(response.ok){
-                const savedNote = await response.json();
-                setNotes(notes.map((note) => (note._id === savedNote._id ? savedNote : note)));
-            } else{
-                console.error("Failed to update note");
-            }
-        }catch(error){
+    const handleEditNote = async (updatedNote) => {
+        try {
+            const savedNote = await editNoteApi(updatedNote);
+            setNotes(
+                notes.map((note) => (note._id === savedNote._id ? savedNote : note))
+            );
+        } catch (error) {
             console.error("Error updating note", error);
         }
     };
 
     const handleDeleteNote = async (id) => {
-        const payload = {
-            method: "DELETE",
-        };
+        try {
+            const success = await deleteNoteApi(id);
 
-        try{
-            const response = await fetch(`${API_URL}/${id}`, payload);
-
-            if(response.ok){
+            if (success) {
                 setNotes(notes.filter((note) => note._id !== id));
                 setShowDeleteModal(false);
-            } else{
-                console.error("Failed to delete note");
             }
-        }catch(error){
-            console.error('Error deleting note', error);
-        };
-    }
+        } catch (error) {
+            console.error("Error deleting note", error);
+        }
+    };
 
     const handleDeleteClick = (note) =>{
         setNoteToDelete(note);
@@ -116,9 +98,11 @@ const NoteHomePage = (props) => {
         fetchNotes();
     },[]);
 
-    useEffect( () => {
-        console.log(notes);
-    },[notes]);
+    // useEffect( () => {
+    //     console.log(notes);
+    // },[notes]);
+
+    const filteredNotes = selectedTag === "All" ? notes : notes.filter(note => note.tag === selectedTag);
 
     return(
         <>
@@ -126,6 +110,15 @@ const NoteHomePage = (props) => {
                 <h1>Your Note Book</h1>
             </div>
 
+            <select
+                className="tag-filter"
+                value = {selectedTag}
+                onChange={(e)=> setSelectedTag(e.target.value)}
+            >
+                {tags.map(tag => (
+                    <option key={tag} value={tag}>{tag}</option>
+                ))}
+            </select>
             <button className="add-note-btn" onClick={() => setShowAddModal(true) }>
                     <FontAwesomeIcon icon={faPlus} /> Add Note
             </button>
@@ -138,7 +131,7 @@ const NoteHomePage = (props) => {
             }
 
             <NotesGrid
-                notes={notes} 
+                notes={filteredNotes} 
                 onEditNote={handleEditClick}
                 onDeleteNote={handleDeleteClick}
             />
